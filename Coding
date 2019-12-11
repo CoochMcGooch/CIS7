@@ -1,0 +1,116 @@
+#include <iostream>
+using namespace std;
+
+
+struct Node {
+    int val, cost;
+    Node* next;
+};
+
+
+struct Edge {
+    int src, dest, weight;
+};
+
+class Graph
+{
+    
+    Node* getAdjListNode(int value, int weight, Node* head)
+    {
+        Node* newNode = new Node;
+        newNode->val = value;
+        newNode->cost = weight;
+
+        
+        newNode->next = head;
+
+        return newNode;
+    }
+
+    int N; 
+
+public:
+
+   
+     Node **head;
+
+    Graph(Edge edges[], int n, int N)
+    {
+        head = new Node*[N]();
+        this->N = N;
+
+ 
+        for (int i = 0; i < N; ++i)
+            head[i] = nullptr;
+
+
+        for (unsigned i = 0; i < n; i++)
+        {
+            int src = edges[i].src;
+            int dest = edges[i].dest;
+            int weight = edges[i].weight;
+
+            Node* newNode = getAdjListNode(dest, weight, head[src]);
+
+
+            head[src] = newNode;
+
+
+        }
+    }
+
+
+    ~Graph() {
+        for (int i = 0; i < N; i++)
+            delete[] head[i];
+
+        delete[] head;
+    }
+};
+
+
+void printList(Node* ptr, int i)
+{
+    while (ptr != nullptr)
+    {
+        cout << "(" << i << ", " << ptr->val
+            << ", " << ptr->cost << ") ";
+
+        ptr = ptr->next;
+    }
+
+    cout << endl;
+}
+
+
+int main()
+{
+  cout << "0 = Riverside" "\n";
+  cout << "1 = Perris" "\n";
+  cout << "2 = Moreno Valley" "\n";
+  cout << "3 = Hemet" "\n";
+
+    Edge edges[] =
+    {
+
+        { 0, 1, 24},{0, 2, 16}, {0, 3, 33 }, { 1, 2, 18 }, { 1, 3, 30 },
+        { 2, 3, 26 }
+    };
+
+  cout << "Shortest path would be Riverside"
+        << "\n to Moreno Valley " "\n";
+
+    int N = 6;
+
+
+    int n = sizeof(edges)/sizeof(edges[0]);
+
+    Graph graph(edges, n, N);
+
+    for (int i = 0; i < N; i++)
+    {
+        printList(graph.head[i], i);
+    }
+
+    return 0;
+}
